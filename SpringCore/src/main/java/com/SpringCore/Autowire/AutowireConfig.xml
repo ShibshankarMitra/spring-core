@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+ https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+	<!-- <bean class="com.SpringCore.Autowire.Address" name="address">
+		<property name="street" value="Wellington Street" />
+		<property name="city" value="Kolkata" />
+	</bean>
+ -->
+ <bean class="com.SpringCore.Autowire.Address" name="address1">
+		<property name="street" value="Ghandhi Street" />
+		<property name="city" value="Delhi" />
+	</bean>
+	
+	<!-- <bean class="com.SpringCore.Autowire.Address" name="address2">
+		<property name="street" value="Ambedhkar Street" />
+		<property name="city" value="Pune" />
+	</bean> -->
+	
+	
+	<bean class="com.SpringCore.Autowire.Emp" name="emp1"
+		autowire="byName"></bean>
+		
+	<bean class="com.SpringCore.Autowire.Emp" name="emp2"
+		autowire="byType"></bean>
+		
+	<bean class="com.SpringCore.Autowire.Emp" name="emp3"
+		autowire="constructor"></bean>
+
+
+
+
+</beans>

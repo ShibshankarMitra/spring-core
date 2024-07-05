@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd
+            http://www.springframework.org/schema/util
+           http://www.springframework.org/schema/util/spring-util.xsd">
+
+
+<!-- Using Util Schema and Standalone Collections -->
+	<util:list list-class="java.util.ArrayList" id="phones">
+		<value>9083516829</value>
+		<value>9035760187</value>
+		<value>033 2357 0112</value>
+	</util:list>
+
+	<!-- Setter injection Value as Attribute inside the Bean tag -->
+	<bean name="Emp1" class="com.SpringCore.Collections.Emp">
+		<property name="name" value="Radhe" />
+
+		<property name="phones" ref="phones">
+			
+
+			<!-- 
+			<list> 
+			<value>9083516829</value> 
+			<value>9035760187</value>
+            <value>033 2357 0187</value> 
+            </list> 
+            Use Inside the List tag if Util Schema is not used. 
+            If Util Schema is imported Use standalone -->
+
+		</property>
+
+		<property name="address">
+
+			<set>
+				<value>Kolkata</value>
+				<value>Chennai</value>
+				<value>Pune</value>
+			</set>
+
+
+		</property>
+
+		<property name="courses">
+
+			<map>
+				<entry key="Java" value="2 Years" />
+				<entry key="Python" value="1.5 Years" />
+				<entry key="DevOps" value="1 Years" />
+			</map>
+
+		</property>
+
+
+	</bean>
+
+
+</beans>

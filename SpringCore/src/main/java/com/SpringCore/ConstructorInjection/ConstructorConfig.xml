@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+ https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+	<bean name="cert1"
+		class="com.SpringCore.ConstructorInjection.Cert">
+		<constructor-arg value="SAML" />
+	</bean>
+
+	<bean class="com.SpringCore.ConstructorInjection.Person"
+		name="person1">
+		<constructor-arg value="123" type="int" />
+		<constructor-arg value="Shibshankar" /> 
+		<constructor-arg ref="cert1" />
+	</bean>
+
+	<bean class="com.SpringCore.ConstructorInjection.Addition"
+		name="addint">
+		<constructor-arg value="120" type="int"></constructor-arg>
+		<constructor-arg value="210" type="int"></constructor-arg>
+
+	</bean>
+
+	<bean class="com.SpringCore.ConstructorInjection.Addition"
+		name="adddouble">
+		<constructor-arg value="12.02" type="double" index="1"></constructor-arg>
+		<constructor-arg value="21.03" type="double" index="0"></constructor-arg>
+	</bean>
+
+
+
+
+</beans>

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx" 
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd
+            http://www.springframework.org/schema/util
+           http://www.springframework.org/schema/util/spring-util.xsd
+           http://www.springframework.org/schema/tx
+           http://www.springframework.org/schema/tx/spring-tx.xsd
+           http://www.springframework.org/schema/mvc
+           http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+           
+           
+        <!--   NameSpaces: 
+         
+           tx:- for Transaction
+           p: - fro Parameter Injection
+           util: For Collections standalone
+           Context: For Annotation context
+           mvc: for MVC App-->
+           
+
+<!-- This is the configuration of the DispatcherServlet.This Contains details of @Controller Classes and ViewResolvers -->
+<!-- DispatcherServlet sends all the request to the @Controller Class. @Controller uses URL-Handler Mapping(@RequestMapping)
+to determine a handler method for the request. -->
+
+<!-- Specifying the Base Location of @Controllers Class where all Controller Methods are present -->
+<context:component-scan base-package="com.spring"/>
+    <context:annotation-config/>
+    
+    
+
+
+<!-- Creating the View Resolver and injecting to Spring Application context -->
+<!-- Once the Handler method returns the Model and View. View Resolver finds the View_name.jsp/html file.
+Preffix and Suffix are specified, using which Viewnames are searched in the mentioned location -->
+
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+		name="viewResolver">
+		<property name="prefix" value="/WEB-INF/views/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+
+<!-- FrontController, @Controller, and <Viewresolver> togetherly forms the webMVC Apps Context.
+     SpringWebMVC Context has been initiated now -->
+     
+     
+     
+     
+                           <!-- Declaring Additional Static MVC resources/ css, js, image, Multipartresolvers, for file upload -->
+
+<!-- Declaring Static Resources for the Dispatcherservlet to serve to the view Using mvc namespace-->
+<mvc:resources location="/WEB-INF/resources/" mapping="/resources/**"/>
+
+<!-- Declaring mvc namespace context as Annotation Driven -->
+<mvc:annotation-driven></mvc:annotation-driven>
+
+
+<!-- Multipart Resolver for fileupload configuration. 
+Very Careful about the bean Name. Use Same name in the Form enctype="multipart/form-data">-->
+<bean name="multipartResolver" class= "org.springframework.web.multipart.commons.CommonsMultipartResolver" />
+
+<!-- 
+                        Configuring Interceptor
+                        
+                        <mvc:interceptors>
+                        <mvc:interceptor>
+                        <mvc:mapping path=""/>
+                        <bean class=""></bean>
+                        </mvc:interceptor>
+                        </mvc:interceptors>
+
+
+ -->
+
+
+<!-- Next Steps, For backend Operation with HibernateORM:
+   
+
+1. The FronController sends the Request to @Controller...... 
+2. @Controller's handler methods needs @Service (@Autowired/ @Injected inside Controller Class) to execute a backend operation.
+3. @service needs @Repository(DAO) for Data Access.(@Autowired/ @Injected inside @Service Class)
+4. @Respository/DAO needs jdbcTemplate/HibernateTemplate (@Autowired/ @Injected inside @Repository Class).
+5. @Repository has methods to Call hibernateTemplate.save(), loadAll(), delete(),execute() etc for CRUD operations.
+
+For the above steps we need to configure SpringORM(hibernate). Hibernate Configuration consists of 2 beans
+
+i>   HibernateTemplate
+ii>  HibernateTransactionManager
+
+And initialize those beans in the SpringWebMVC Application context
+ -->
+
+<!-- Configuring SpringORM(hibernate) -->
+
+
+
+<!--Step 1:
+DataSource Coniguration -->
+	<bean
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+		name="ds">
+		<property name="driverClassName"
+			value="com.mysql.jdbc.Driver" />
+		<property name="url"
+			value="jdbc:mysql://localhost:3306/product" />
+		<property name="username" value="root"></property>
+		<property name="password" value="root"></property>
+	</bean>
+	<!--DataSource Coniguration Completed-->
+  
+
+
+
+<!--Step 2:
+ Configuring Hibernate SessionFactory and Injecting Datasource -->
+	<bean
+		class="org.springframework.orm.hibernate5.LocalSessionFactoryBean"
+		name="factory">
+		<property name="dataSource" ref="ds"></property>
+
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL57Dialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.format_sql">true</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+			</props>
+		</property>
+
+		<property name="annotatedClasses">
+			<list>
+				<value>com.spring.Entity.Product</value>		
+				<value>com.spring.Entity.Details</value>
+			</list>
+		</property>
+	</bean><!--Hibernate SessionFactory is configured -->
+
+
+	
+
+
+<!--Step 3:
+Injecting Hibernate SessionFactory to SpringORM Class(org.springframework.orm.hibernate5.HibernateTemplate) 
+and Creating hibernateTemplate bean -->
+
+	<bean class="org.springframework.orm.hibernate5.HibernateTemplate"
+		name="template">
+		<property name="sessionFactory" ref="factory"></property>
+	</bean><!-- HibernateTemplate is created in the Application Context And ready to be injected -->
+
+
+
+
+
+<!-- Step 4
+Injecting Hibernate SessionFactory to Spring Class(org.springframework.orm.hibernate5.HibernateTransactionManager) 
+and Creating transactionManager bean  -->
+	<bean
+		class="org.springframework.orm.hibernate5.HibernateTransactionManager"
+		name="transactionManager">
+		<property name="sessionFactory" ref="factory"></property>
+	</bean>
+	
+	
+<!--Step 5:
+TransactionManager is configured  as Annotation driven in the Application Context-->
+<tx:annotation-driven transaction-manager="transactionManager" />
+
+
+
+
+
+
+
+</beans>
